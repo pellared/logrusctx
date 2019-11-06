@@ -1,4 +1,4 @@
-module github.com/pellared/logrus/logctx
+module github.com/pellared/logrusctx/logctx
 
 go 1.13
 
