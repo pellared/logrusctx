@@ -4,7 +4,6 @@ import (
 	"context"
 	"os"
 	"sync/atomic"
-	"time"
 
 	"github.com/pellared/logrus/logctx"
 
@@ -13,21 +12,22 @@ import (
 
 func Example_reqID() {
 	log.SetOutput(os.Stdout)
-	reqID := "we232s75tyg9rev"                                            // in reality randomly generated
-	timestamp, _ := time.Parse(time.RFC3339, "2012-11-01T22:08:41+00:00") // hardcode the log timestamp
+	log.SetFormatter(&log.TextFormatter{DisableTimestamp: true})
+
+	reqID := "we232s75tyg9rev" // in reality randomly generated
 
 	// setting contextual log entry
 	ctx := logctx.New(context.Background(), log.WithField("ReqID", reqID))
 
 	// retrieving context log entry, adding some data and emitting the log
-	logctx.From(ctx).WithTime(timestamp).WithField("foo", "bar").Info("foobar created")
+	logctx.From(ctx).WithField("foo", "bar").Info("foobar created")
 
-	// Output: time="2012-11-01T22:08:41Z" level=info msg="foobar created" ReqID=we232s75tyg9rev foo=bar
+	// Output: level=info msg="foobar created" ReqID=we232s75tyg9rev foo=bar
 }
 
 func Example_goroutineID() {
 	log.SetOutput(os.Stdout)
-	timestamp, _ := time.Parse(time.RFC3339, "2012-11-01T22:08:41+00:00") // hardcode the log timestamp
+	log.SetFormatter(&log.TextFormatter{DisableTimestamp: true})
 
 	// setting up GoroutineIDs
 	const LogFieldGoroutineID = "grtnID"
@@ -35,7 +35,7 @@ func Example_goroutineID() {
 	var goroutineIDCounter int64
 
 	// set context log entry for the main goroutine
-	logEntry := log.WithField(LogFieldGoroutineID, atomic.AddInt64(&goroutineIDCounter, 1)).WithTime(timestamp)
+	logEntry := log.WithField(LogFieldGoroutineID, atomic.AddInt64(&goroutineIDCounter, 1))
 	ctx := logctx.New(context.Background(), logEntry)
 
 	// spawnGoroutine creates runs new goroutine with contextual log entries that has goroutine IDs
@@ -80,8 +80,8 @@ func Example_goroutineID() {
 	})
 
 	// Output:
-	// time="2012-11-01T22:08:41Z" level=info msg="first child goroutine started" foo=bar grtnID=2 grtnPrntID=1
-	// time="2012-11-01T22:08:41Z" level=info msg="second child goroutine" fizz=buzz grtnID=3 grtnPrntID=2
-	// time="2012-11-01T22:08:41Z" level=error msg="goroutine panicked" grtnID=4 grtnPrntID=3 panic="panic from third child"
-	// time="2012-11-01T22:08:41Z" level=info msg="first child goroutine finished" foo=bar grtnID=2 grtnPrntID=1
+	// level=info msg="first child goroutine started" foo=bar grtnID=2 grtnPrntID=1
+	// level=info msg="second child goroutine" fizz=buzz grtnID=3 grtnPrntID=2
+	// level=error msg="goroutine panicked" grtnID=4 grtnPrntID=3 panic="panic from third child"
+	// level=info msg="first child goroutine finished" foo=bar grtnID=2 grtnPrntID=1
 }
