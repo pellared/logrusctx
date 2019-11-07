@@ -8,6 +8,6 @@ GoDoc: https://godoc.org/github.com/pellared/logrusutil/ctxlog
 
 
 ## errfields
-Wrap errors with fields and then log it in structured way.
+Wrap errors with fields and then log them in a structured way.
 
 GoDoc: https://godoc.org/github.com/pellared/logrusutil/errfields
