@@ -1,5 +1,7 @@
 # logrusutil
 
+![Workflow Status](https://github.com/pellared/logrusutil/workflows/Workflow/badge.svg)
+
 Small, easy to use, yet powerful utilities for <https://github.com/sirupsen/logrus>
 
 ## ctxlog
