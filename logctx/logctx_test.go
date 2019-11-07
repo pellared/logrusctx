@@ -14,7 +14,7 @@ func Example_reqID() {
 	log.SetOutput(os.Stdout)
 	log.SetFormatter(&log.TextFormatter{DisableTimestamp: true})
 
-	reqID := "we232s75tyg9rev" // in reality randomly generated
+	reqID := "we232s75tyg9rev" // in reality it would be generated
 
 	// setting contextual log entry
 	ctx := logctx.New(context.Background(), log.WithField("ReqID", reqID))
