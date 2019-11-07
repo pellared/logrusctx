@@ -1,3 +1,4 @@
+// Package logctx adds contextual logging to logrus.
 package logctx
 
 import (
