@@ -12,8 +12,8 @@ import (
 func Example() {
 	log.SetOutput(os.Stdout)
 
-	// setup the errfields.LogFormatter
-	log.SetFormatter(&errfields.LogFormatter{
+	// setup the errfields.Formatter
+	log.SetFormatter(&errfields.Formatter{
 		Formatter: &log.TextFormatter{DisableTimestamp: true},
 	})
 
