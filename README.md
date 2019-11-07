@@ -1,4 +1,5 @@
 # logrusutil
+Small, easy to use, yet powerful utilities for https://github.com/sirupsen/logrus
 
 ## ctxlog
 Adds contextual logging to logrus.
