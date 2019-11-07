@@ -1,4 +1,4 @@
-package errfields
+package errfield
 
 import "errors"
 
@@ -17,7 +17,7 @@ func (e *Error) Error() string {
 	return e.Err.Error()
 }
 
-// Add return error and adds a field to *errfields.Error in the error chain.
+// Add return error and adds a field to *errfield.Error in the error chain.
 func Add(err error, key string, value interface{}) error {
 	var e *Error
 	if errors.As(err, &e) {

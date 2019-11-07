@@ -1,10 +1,10 @@
-package errfields_test
+package errfield_test
 
 import (
 	"errors"
 	"os"
 
-	"github.com/pellared/logrusctx/errfields"
+	"github.com/pellared/logrusutil/errfield"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -12,15 +12,15 @@ import (
 func Example() {
 	log.SetOutput(os.Stdout)
 
-	// setup the errfields.Formatter
-	log.SetFormatter(&errfields.Formatter{
+	// setup the errfield.Formatter
+	log.SetFormatter(&errfield.Formatter{
 		Formatter: &log.TextFormatter{DisableTimestamp: true},
 	})
 
-	// use errfields.Add to add fields
+	// use errfield.Add to add fields
 	err := errors.New("something failed")
-	err = errfields.Add(err, "foo", "bar")
-	err = errfields.Add(err, "fizz", "buzz")
+	err = errfield.Add(err, "foo", "bar")
+	err = errfield.Add(err, "fizz", "buzz")
 	log.WithError(err).Error("crash")
 
 	// Output: level=error msg=crash error="something failed" fizz=buzz foo=bar

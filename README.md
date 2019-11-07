@@ -7,7 +7,7 @@ Adds contextual logging to logrus.
 GoDoc: https://godoc.org/github.com/pellared/logrusutil/ctxlog
 
 
-## errfields
+## errfield
 Wrap errors with fields and then log them in a structured way.
 
-GoDoc: https://godoc.org/github.com/pellared/logrusutil/errfields
+GoDoc: https://godoc.org/github.com/pellared/logrusutil/errfield

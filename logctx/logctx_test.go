@@ -5,7 +5,7 @@ import (
 	"os"
 	"sync/atomic"
 
-	"github.com/pellared/logrusctx/logctx"
+	"github.com/pellared/logrusutil/logctx"
 
 	log "github.com/sirupsen/logrus"
 )

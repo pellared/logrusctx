@@ -1,5 +1,5 @@
-// Package errfields adds possibility to wrap errors with fields and then log them in structured way.
-package errfields
+// Package errfield adds possibility to wrap errors with fields and then log them in structured way.
+package errfield
 
 import (
 	"errors"
