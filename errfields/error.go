@@ -17,8 +17,7 @@ func (e *Error) Error() string {
 	return e.Err.Error()
 }
 
-// Add adds a field to *errfields.Error in the error chain.
-// Returns a new *errfields.Error if it does not exits in the chain.
+// Add return error and adds a field to *errfields.Error in the error chain.
 func Add(err error, key string, value interface{}) error {
 	var e *Error
 	if errors.As(err, &e) {
