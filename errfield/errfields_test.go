@@ -26,7 +26,7 @@ func Example_basic() {
 	// Output: level=error msg=crash error="something failed" fizz=buzz foo=bar
 }
 
-func ExampleFormatter_errorFieldsKey() {
+func Example_errorFieldsKey() {
 	log.SetOutput(os.Stdout)
 
 	// setup the errfield.Formatter with ErrorFieldsKey
