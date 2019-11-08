@@ -2,11 +2,11 @@
 
 Small, easy to use, yet powerful utility packages for <https://github.com/sirupsen/logrus>
 
-## `ctxlog` package
+## `logctx` package
 
 Adds contextual logging to logrus.
 
-GoDoc: <https://godoc.org/github.com/pellared/logrusutil/ctxlog>
+GoDoc: <https://godoc.org/github.com/pellared/logrusutil/logctx>
 
 ## `errfield` package
 

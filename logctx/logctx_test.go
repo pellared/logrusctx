@@ -25,6 +25,19 @@ func Example_reqID() {
 	// Output: level=info msg="foobar created" ReqID=we232s75tyg9rev foo=bar
 }
 
+func ExampleDefaultLogEntry() {
+	log.SetOutput(os.Stdout)
+	log.SetFormatter(&log.TextFormatter{DisableTimestamp: true})
+
+	// set the default log entry
+	logctx.DefaultLogEntry = log.WithField("foo", "bar")
+
+	// get a log entry from context for which a contextual entry was not set
+	logctx.From(context.Background()).Info("hello world")
+
+	// Output: level=info msg="hello world" foo=bar
+}
+
 func Example_goroutineID() {
 	log.SetOutput(os.Stdout)
 	log.SetFormatter(&log.TextFormatter{DisableTimestamp: true})
