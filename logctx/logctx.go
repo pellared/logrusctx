@@ -7,8 +7,8 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-// DefaultLogger is used to create a new log entry if there is none in the context.
-var DefaultLogger = logrus.StandardLogger()
+// DefaultLogEntry is used to create a new log entry if there is none in the context.
+var DefaultLogEntry = logrus.NewEntry(logrus.StandardLogger())
 
 type contextKey struct{}
 
@@ -18,10 +18,10 @@ func New(ctx context.Context, logEntry *logrus.Entry) context.Context {
 }
 
 // From returns the log entry from the context.
-// Returns log entry from DefaultLogger if ther is no log entry in the context.
+// Returns log entry from DefaultLogEntry if there is no log entry in the context.
 func From(ctx context.Context) *logrus.Entry {
 	if entry, ok := ctx.Value(contextKey{}).(*logrus.Entry); ok {
 		return entry
 	}
-	return logrus.NewEntry(DefaultLogger)
+	return DefaultLogEntry
 }

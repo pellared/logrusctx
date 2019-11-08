@@ -10,6 +10,8 @@ import (
 // Formatter decorates logrus.Formatter to add error fields under to the log entry.
 // Implements logrus.Formatter.
 type Formatter struct {
+	// Formatter is the decorated logrus.Formatter.
+	// Default TextFormatter is used when none provided.
 	logrus.Formatter
 }
 
