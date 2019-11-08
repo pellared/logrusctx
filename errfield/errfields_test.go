@@ -9,7 +9,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func Example() {
+func Example_basic() {
 	log.SetOutput(os.Stdout)
 
 	// setup the errfield.Formatter
@@ -24,4 +24,22 @@ func Example() {
 	log.WithError(err).Error("crash")
 
 	// Output: level=error msg=crash error="something failed" fizz=buzz foo=bar
+}
+
+func ExampleFormatter_ErrorFieldsKey() {
+	log.SetOutput(os.Stdout)
+
+	// setup the errfield.Formatter with ErrorFieldsKey
+	log.SetFormatter(&errfield.Formatter{
+		Formatter:      &log.TextFormatter{DisableTimestamp: true},
+		ErrorFieldsKey: "error_fields",
+	})
+
+	// use errfield.Add to add fields
+	err := errors.New("something failed")
+	err = errfield.Add(err, "foo", "bar")
+	err = errfield.Add(err, "fizz", "buzz")
+	log.WithError(err).Error("crash")
+
+	// Output: level=error msg=crash error="something failed" error_fields="map[fizz:buzz foo:bar]"
 }
