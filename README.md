@@ -1,4 +1,4 @@
-# logrusutil :hammer: [![GoDoc](https://godoc.org/github.com/pellared/logrusutil?status.svg)](https://godoc.org/github.com/pellared/logrusutil) ![Build Status](https://github.com/pellared/logrusutil/workflows/build/badge.svg)
+# logrusutil :hammer: [![GoDoc](https://godoc.org/github.com/pellared/logrusutil?status.svg)](https://godoc.org/github.com/pellared/logrusutil) ![Build Status](https://github.com/pellared/logrusutil/workflows/build/badge.svg) [![golangci](https://golangci.com/badges/github.com/pellared/logrusutil.svg)](https://golangci.com/r/github.com/pellared/logrusutil)
 
 Small, easy to use, yet powerful utility packages for <https://github.com/sirupsen/logrus>.
 
