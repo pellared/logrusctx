@@ -2,6 +2,7 @@ package logctx_test
 
 import (
 	"context"
+	"math/rand"
 	"os"
 	"sync/atomic"
 
@@ -14,15 +15,14 @@ func Example_reqID() {
 	log.SetOutput(os.Stdout)
 	log.SetFormatter(&log.TextFormatter{DisableTimestamp: true})
 
-	reqID := "we232s75tyg9rev" // in reality it would be generated
-
 	// setting contextual log entry
-	ctx := logctx.New(context.Background(), log.WithField("ReqID", reqID))
+	reqID := rand.Int()
+	ctx := logctx.New(context.Background(), log.WithField("request_id", reqID))
 
 	// retrieving context log entry, adding some data and emitting the log
 	logctx.From(ctx).WithField("foo", "bar").Info("foobar created")
 
-	// Output: level=info msg="foobar created" ReqID=we232s75tyg9rev foo=bar
+	// Output: level=info msg="foobar created" foo=bar request_id=5577006791947779410
 }
 
 func ExampleDefaultLogEntry() {
