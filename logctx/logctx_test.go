@@ -83,13 +83,9 @@ func Example_goroutineID() {
 	const LogFieldGoroutineParentID = "grtnPrntID"
 	var goroutineIDCounter int64
 
-	// set context log entry for the main goroutine
-	logEntry := log.WithField(LogFieldGoroutineID, atomic.AddInt64(&goroutineIDCounter, 1))
-	ctx := logctx.New(context.Background(), logEntry)
-
 	// spawnGoroutine creates runs new goroutine with contextual log entries that has goroutine IDs
 	// returns channel which closes when the goroutine
-	// logs error if goroutine panicked
+	// logs error and sends the panic value through the channel if goroutine panicked
 	spawnGoroutine := func(ctx context.Context, fn func(context.Context)) <-chan interface{} {
 		entry := logctx.From(ctx)
 		if gortnID, ok := entry.Data[LogFieldGoroutineID].(int64); ok {
@@ -105,6 +101,7 @@ func Example_goroutineID() {
 						//	WithField("stack", string(debug.Stack())).
 						WithField("panic", r).
 						Error("goroutine panicked")
+					done <- r
 				}
 				close(done)
 			}()
@@ -113,23 +110,19 @@ func Example_goroutineID() {
 		return done
 	}
 
-	<-spawnGoroutine(ctx, func(ctx context.Context) {
+	// use spawnGoroutine and contextual logging
+	<-spawnGoroutine(context.Background(), func(ctx context.Context) {
 		logEntry := logctx.From(ctx).WithField("foo", "bar")
 		logEntry.Info("first child goroutine started")
 
 		<-spawnGoroutine(ctx, func(ctx context.Context) {
-			logctx.From(ctx).WithField("fizz", "buzz").Info("second child goroutine")
-
-			<-spawnGoroutine(ctx, func(ctx context.Context) {
-				panic("panic from third child")
-			})
+			panic("panic from second child")
 		})
 
 		logEntry.Info("first child goroutine finished")
 	})
 	// Output:
-	// level=info msg="first child goroutine started" foo=bar grtnID=2 grtnPrntID=1
-	// level=info msg="second child goroutine" fizz=buzz grtnID=3 grtnPrntID=2
-	// level=error msg="goroutine panicked" grtnID=4 grtnPrntID=3 panic="panic from third child"
-	// level=info msg="first child goroutine finished" foo=bar grtnID=2 grtnPrntID=1
+	// level=info msg="first child goroutine started" foo=bar grtnID=1
+	// level=error msg="goroutine panicked" grtnID=2 grtnPrntID=1 panic="panic from second child"
+	// level=info msg="first child goroutine finished" foo=bar grtnID=1
 }
