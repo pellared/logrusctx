@@ -1,15 +1,11 @@
-# logrusutil :hammer: ![Workflow Status](https://github.com/pellared/logrusutil/workflows/Workflow/badge.svg)
+# logrusutil :hammer: [![GoDoc](https://godoc.org/github.com/pellared/logrusutil?status.svg)](https://godoc.org/github.com/pellared/logrusutil) ![Build Status](https://github.com/pellared/logrusutil/workflows/build/badge.svg)
 
-Small, easy to use, yet powerful utility packages for <https://github.com/sirupsen/logrus>
+Small, easy to use, yet powerful utility packages for <https://github.com/sirupsen/logrus>.
 
-## `logctx` package
+## `logctx` package [![GoDoc](https://godoc.org/github.com/pellared/logrusutil/logctx?status.svg)](https://godoc.org/github.com/pellared/logrusutil/logctx)
 
-Adds contextual logging to logrus.
+Add a log entry to the context using `logctx.New(ctx, logEntry)`. Retrieve the log entry using `logctx.From(ctx)`.
 
-GoDoc: <https://godoc.org/github.com/pellared/logrusutil/logctx>
+## `errfield` package [![GoDoc](https://godoc.org/github.com/pellared/logrusutil/errfield?status.svg)](https://godoc.org/github.com/pellared/logrusutil/errfield)
 
-## `errfield` package
-
-Wrap errors with fields and then log them in a structured way.
-
-GoDoc: <https://godoc.org/github.com/pellared/logrusutil/errfield>
+Wrap an error with fields using `errfield.Add(err, "key", value)`. Use `errfield.Formatter` to log the fields in a structured way.
