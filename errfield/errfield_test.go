@@ -22,7 +22,6 @@ func Example_basic() {
 	err = errfield.Add(err, "foo", "bar")
 	err = errfield.Add(err, "fizz", "buzz")
 	log.WithError(err).Error("crash")
-
 	// Output: level=error msg=crash error="something failed" fizz=buzz foo=bar
 }
 
@@ -40,6 +39,5 @@ func ExampleFormatter_errorFieldsKey() {
 	err = errfield.Add(err, "foo", "bar")
 	err = errfield.Add(err, "fizz", "buzz")
 	log.WithError(err).Error("crash")
-
 	// Output: level=error msg=crash error="something failed" error_fields="map[fizz:buzz foo:bar]"
 }

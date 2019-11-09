@@ -3,6 +3,8 @@ package logctx_test
 import (
 	"context"
 	"math/rand"
+	"net/http"
+	"net/http/httptest"
 	"os"
 	"sync/atomic"
 
@@ -11,18 +13,53 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func Example_reqID() {
+func Example_basic() {
 	log.SetOutput(os.Stdout)
 	log.SetFormatter(&log.TextFormatter{DisableTimestamp: true})
 
 	// setting contextual log entry
-	reqID := rand.Int()
-	ctx := logctx.New(context.Background(), log.WithField("request_id", reqID))
+	ctx := logctx.New(context.Background(), log.WithField("foo", "bar"))
 
 	// retrieving context log entry, adding some data and emitting the log
-	logctx.From(ctx).WithField("foo", "bar").Info("foobar created")
+	logctx.From(ctx).Info("hello world")
+	// Output: level=info msg="hello world" foo=bar
+}
 
-	// Output: level=info msg="foobar created" foo=bar request_id=5577006791947779410
+func Example_hTTPRequestID() {
+	log.SetOutput(os.Stdout)
+	log.SetFormatter(&log.TextFormatter{DisableTimestamp: true})
+
+	// contextual log middleware
+	logMiddleware := func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			reqID := rand.Int()
+			logEntry := log.WithField("request_id", reqID)
+			logEntry.Info("request started")
+
+			// setting contextual log entry
+			ctx := logctx.New(r.Context(), logEntry)
+			next.ServeHTTP(w, r.WithContext(ctx))
+
+			logEntry.Info("request finished")
+		})
+	}
+
+	// handler retrieving request contextual log entry, adding some data and emitting the log
+	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ctx := r.Context()
+		logctx.From(ctx).WithField("foo", "bar").Info("foobar created")
+	})
+
+	// run HTTP server with logging middleware
+	ts := httptest.NewServer(logMiddleware(handler))
+	defer ts.Close()
+
+	// make request
+	http.Get(ts.URL)
+	// Output:
+	// level=info msg="request started" request_id=5577006791947779410
+	// level=info msg="foobar created" foo=bar request_id=5577006791947779410
+	// level=info msg="request finished" request_id=5577006791947779410
 }
 
 func ExampleDefaultLogEntry() {
@@ -34,7 +71,6 @@ func ExampleDefaultLogEntry() {
 
 	// get a log entry from context for which a contextual entry was not set
 	logctx.From(context.Background()).Info("hello world")
-
 	// Output: level=info msg="hello world" foo=bar
 }
 
@@ -91,7 +127,6 @@ func Example_goroutineID() {
 
 		logEntry.Info("first child goroutine finished")
 	})
-
 	// Output:
 	// level=info msg="first child goroutine started" foo=bar grtnID=2 grtnPrntID=1
 	// level=info msg="second child goroutine" fizz=buzz grtnID=3 grtnPrntID=2
