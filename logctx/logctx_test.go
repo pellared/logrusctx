@@ -62,31 +62,18 @@ func Example_hTTPRequestID() {
 	// level=info msg="request finished" request_id=5577006791947779410
 }
 
-func ExampleDefaultLogEntry() {
-	log.SetOutput(os.Stdout)
-	log.SetFormatter(&log.TextFormatter{DisableTimestamp: true})
-
-	// set the default log entry
-	logctx.DefaultLogEntry = log.WithField("foo", "bar")
-
-	// get a log entry from context for which a contextual entry was not set
-	logctx.From(context.Background()).Info("hello world")
-	// Output: level=info msg="hello world" foo=bar
-}
-
 func Example_goroutineID() {
 	log.SetOutput(os.Stdout)
 	log.SetFormatter(&log.TextFormatter{DisableTimestamp: true})
 
-	// setting up GoroutineIDs
-	const LogFieldGoroutineID = "grtnID"
-	const LogFieldGoroutineParentID = "grtnPrntID"
-	var goroutineIDCounter int64
-
 	// spawnGoroutine creates runs new goroutine with contextual log entries that has goroutine IDs
 	// returns channel which closes when the goroutine
 	// logs error and sends the panic value through the channel if goroutine panicked
+	var goroutineIDCounter int64
 	spawnGoroutine := func(ctx context.Context, fn func(context.Context)) <-chan interface{} {
+		const LogFieldGoroutineID = "grtnID"
+		const LogFieldGoroutineParentID = "grtnPrntID"
+
 		entry := logctx.From(ctx)
 		if gortnID, ok := entry.Data[LogFieldGoroutineID].(int64); ok {
 			entry = entry.WithField(LogFieldGoroutineParentID, gortnID)
@@ -125,4 +112,20 @@ func Example_goroutineID() {
 	// level=info msg="first child goroutine started" foo=bar grtnID=1
 	// level=error msg="goroutine panicked" grtnID=2 grtnPrntID=1 panic="panic from second child"
 	// level=info msg="first child goroutine finished" foo=bar grtnID=1
+}
+
+// IMPORTANT: this test is a the end because it alters global DefaultLogEntry,
+// yet I want to have the examples simple
+
+//
+func Example_defaultLogEntry() {
+	log.SetOutput(os.Stdout)
+	log.SetFormatter(&log.TextFormatter{DisableTimestamp: true})
+
+	// set the default log entry
+	logctx.DefaultLogEntry = log.WithField("foo", "bar")
+
+	// get a log entry from context for which a contextual entry was not set
+	logctx.From(context.Background()).Info("hello world")
+	// Output: level=info msg="hello world" foo=bar
 }
